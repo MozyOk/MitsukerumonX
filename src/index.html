@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>MitsukerumonX</title>
+  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="./js/web3.min.js"></script>
+  <script language="javascript" type="text/javascript" src="./js/contract_abi.js"></script>
+</head>
+
+<body>
+  <div id="txStatus"></div>
+  <div id="contract"></div>
+
+  <h1>Mitsukerumon</h1>
+  Mitsukerumonは、災害時の安否確認アプリケーションです。
+
+  <h2>使い方</h2>
+  被災者：自分の安全を表明するために、データを入力してください。<br>
+  被災者を見つけたい人：掲示板から、被災者の安否を確認してください。<br>
+
+  <h2>被災者入力欄</h2>
+  <h6>名前</h6>
+  <input type="text" id="name">
+  <h5>タイトル</h5>
+  <input type="text" id="title">
+  <h5>時間</h5>
+  <input type="text" id="time">
+　<h5>報告</h5>
+  <input type="button" value="Set" onClick="set()">
+
+
+  <h2>これまで安否を報告した人</h2>
+
+  <table border="1" cellspacing="0">
+<tr style="background-color:#F0F7F9;font-weight:bold;">
+<td style="padding: 5px;text-align:center;font-size:13px;">番号</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">名前</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">タイトル</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">時間</td>
+</tr>
+<tr>
+<td style="padding: 5px; text-align:center;font-size:13px;">uint id（ループかけたい）</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">string nam</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">string title</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">uint time</td>
+</tr>
+<tr style="background-color:#E8E3D2;">
+<td style="padding: 5px; text-align:center;font-size:13px;">2</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">satoshi</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">探さないでください</td>
+<td style="padding: 5px; text-align:center;font-size:13px;">10月20日10時</td>
+</tr>
+
+
+  <script>
+    var contract;
+    var userAccount;
+
+    function startApp() {
+      //Replace "YOUR_CONTRACT_ADDRESS" with your contract address
+      var contractAddress = "0x6a69b4ca6372e0bd5eb914a5e4f69194215d2488"; //デプロイ後のコントラクトアドレス
+      contract = new web3js.eth.Contract(contractABI, contractAddress);
+      //Userがメタマスクアカウントを変えた時に必要な記述
+      var accountInterval = setInterval(function() {
+        web3.eth.getAccounts((error, accounts) => {
+          if (accounts[0] !== userAccount) {
+            userAccount = accounts[0];
+          }
+        });
+      }, 100);
+    }
+
+    //numberをコントラクトに送る。
+    function set() {
+      var _Safeperson = document.getElementById("_name", "_title", "_time").SafepersonDate;
+      contract.methods.set(_Safeperson)
+        .send({
+          from: userAccount
+        })
+        .on("transactionhash", function(txhash) {
+          alert("Txhash: ", +txhash);
+        })
+        .on("receipt", function(receipt) {
+          console.log("success")
+        })
+        .on("error", function(error) {
+          console.log("error")
+        });
+
+
+        var table = document.getElementById("table");
+                // 行を行末に追加
+                var row = table.insertRow(-1);
+                //td分追加
+                var cell1 = row.insertCell(-1);
+                var cell2 = row.insertCell(-1);
+                // セルの内容入力
+                cell1.innerHTML = '行を追加しました';
+                cell2.innerHTML = 'この行を削除しますか？<input type="button" value=削除" id="coladd" onclick="coldel(this)">';
+            }
+            function coldel(obj) {
+                // 削除ボタンを押下された行を取得
+                tr = obj.parentNode.parentNode;
+                // trのインデックスを取得して行を削除する
+                tr.parentNode.deleteRow(tr.sectionRowIndex);
+
+
+
+    }
+    //ここだけ、コントラクトでイベントOKなら「Looking成功したよ！」って出すのだけ書かないといけない。htmlで、記述が出現するのどうやって書くか学ばなないと。
+    function get() {
+      return contract.methods.get(_Safeperson)
+        .send({
+          from: userAccount
+        })
+        .on("receipt", function(receipt) {
+          $("#txStatus").text("Successfully you can find " + _name + "!");
+          // トランザクションがブロックチェーンに取り込まれた。UIをアップデートしよう
+          getZombiesByOwner(userAccount).then(displayZombies);
+        })
+        .on("error", function(error) {
+          $("#txStatus").text("Sorry you don't find Disastered person yet");
+        });
+    }
+
+    //メタマスクを検出するためのテンプレコード
+    window.addEventListener('load', function() {
+      // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+      if (typeof web3 !== 'undefined') {
+        // Use Mist/MetaMask's provider
+        web3js = new Web3(web3.currentProvider);
+        alert("起動");
+      } else {
+        alert("メタマスクをインストールしてください。");
+        // Handle the case where the user doesn't have Metamask installed
+        // Probably show them a message prompting them to install Metamask
+      }
+      // Now you can start your app & access web3 freely:
+      startApp()
+    })
+  </script>
+
+</body>
+
+</html>
