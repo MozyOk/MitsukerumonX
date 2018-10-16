@@ -1,5 +1,5 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = 'asset mask pause joke very select work water culture gain catalog pattern';
+var mnemonic = 'YOUR MNEMONIC';
 
     module.exports = {
   networks: {
