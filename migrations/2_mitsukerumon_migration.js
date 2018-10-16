@@ -1,5 +1,5 @@
-var mitsukerumonX = artifacts.require("./mitsukerumonX.sol");
+var MitsukerumonX = artifacts.require("./mitsukerumonX.sol");
 
   module.exports = function(deployer) {
-  deployer.deploy(mitsukerumonX);
+  deployer.deploy(MitsukerumonX);
 };

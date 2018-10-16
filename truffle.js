@@ -10,4 +10,3 @@ var mnemonic = 'asset mask pause joke very select work water culture gain catalo
     }
   }
 };
-  

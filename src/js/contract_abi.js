@@ -1,98 +1,9 @@
-"abi": [
+MitsukerumonXABI = [
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "safepeople",
+    "inputs": [],
+    "name": "last_completed_migration",
     "outputs": [
-      {
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "name": "time",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "name": "time",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewSafedeclaration",
-    "type": "event"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "name": "_title",
-        "type": "string"
-      },
-      {
-        "name": "_time",
-        "type": "uint256"
-      }
-    ],
-    "name": "set",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "get",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      },
-      {
-        "name": "",
-        "type": "string"
-      },
       {
         "name": "",
         "type": "uint256"
@@ -105,15 +16,49 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "getLength",
+    "name": "owner",
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "completed",
+        "type": "uint256"
+      }
+    ],
+    "name": "setCompleted",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "new_address",
+        "type": "address"
+      }
+    ],
+    "name": "upgrade",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
