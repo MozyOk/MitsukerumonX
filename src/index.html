@@ -9,10 +9,8 @@
 </head>
 
 <body>
-  <div id="txStatus"></div>
-  <div id="contract"></div>
 
-  <h1>MitsukerumonX</h1>
+  <h1 style="color: red;">MitsukerumonX</h1>
   MitsukerumonXは、災害時の安否確認アプリケーションです。
 
   <h2>使い方</h2>
@@ -20,16 +18,18 @@
   被災者を見つけたい人：掲示板から、被災者の安否を確認してください。<br>
 
   <h2>被災者入力欄</h2>
-  <h6>名前</h6>
-  <input type="text" id="name">
-  <h5>タイトル</h5>
-  <input type="text" id="title">
-  <h5>時間</h5>
-  <input type="text" id="time">
-　<h5>報告</h5>
-  <input type="button" value="Set" onClick="set()">
-  <input type="button" value="Get" onClick="get()">
+  <form id="form">
+  <div>名前</div>
+  <textarea id="_name"></textarea>
+  <div>タイトル</div>
+  <textarea id="_title"></textarea>
+  <div>時間</div>
+  <textarea id="_time"></textarea>
 
+　<h5>報告</h5>
+  <button type="submit" onclick="set">Set</button>
+  <button type="submit" onclick="set">Get</button>
+  </form>
 
   <h2>これまで安否を報告した人</h2>
 
@@ -53,6 +53,8 @@
 <td style="padding: 5px; text-align:center;font-size:13px;">10月20日10時</td>
 </tr>
 
+<div id="Safeperson"></div>
+
 
   <script>
     var MitsukerumonX;
@@ -72,13 +74,11 @@
       }, 100);
     }
 
-    //numberをコントラクトに送る。
+    //「インプット」numberをコントラクトに送る。この書き方で、コントラクトに数値がしまえてたら感無量。
     function set() {
-      var _Safeperson = document.getElementById("_name", "_title", "_time").SafepersonDate;
-      MitsukerumonX.methods.set(_Safeperson)
-        .send({
-          from: userAccount
-        })
+      var Safeperson = document.getElementById(_name, _title, _time).SafepersonDate;
+      MitsukerumonX.methods.set(Safeperson)
+        .send({from: userAccount})
         .on("transactionhash", function(txhash) {
           alert("Txhash: ", +txhash);
         })
@@ -91,20 +91,30 @@
 
 
     }
-    //ここだけ、コントラクトでイベントOKなら「Looking成功したよ！」って出すのだけ書かないといけない。htmlで、記述が出現するのどうやって書くか学ばなないと。
+    //「アウトプット」
     function get() {
       return MitsukerumonX.methods.get(_Safeperson)
-        .send({
-          from: userAccount
-        })
-        .on("receipt", function(receipt) {
-          $("#txStatus").text("Successfully you can find " + _name + "!");
-          // トランザクションがブロックチェーンに取り込まれた。UIをアップデートしよう
-          getZombiesByOwner(userAccount).then(displayZombies);
-        })
-        .on("error", function(error) {
-          $("#txStatus").text("Sorry you don't find Disastered person yet");
+      MitsukerumonX.methods.get().call().then(function(string, string, uint){
+        $("#Safeperson").append(`<div>
+            <ul>
+              <li>name: ${safepeople}</li>
+            </ul>
+            <ul>
+              <li>title: ${safepeople}</li>
+            </ul>
+            <ul>
+              <li>time: ${safepeople}</li>
+            </ul>
+          </div>`);
         });
+        .send({ from: userAccount })
+            //.send({ from: "0xアカウントアドレス" })//直接アカウントアドレス叩けばsendできる
+              .on("receipt", function(receipt){
+                console.log("success");
+              })
+             .on("error", function(error){
+                console.log("error");
+             });
     }
 
     //メタマスクを検出するためのテンプレコード

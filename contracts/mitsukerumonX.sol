@@ -5,9 +5,9 @@ contract MitsukerumonX {
   event NewSafeperson(uint id, string name, string title, uint time);
 
   struct Safeperson {
-    string name;
-    string title;
-    uint time;
+    string _name;
+    string _title;
+    uint _time;
   }
 
   Safeperson[] public safepeople;
